@@ -1,14 +1,17 @@
 import {React, useEffect} from "react";
 import Success from "../utilites/Sucess";
 import 'react-toastify/dist/ReactToastify.css'; 
-const Image_retrive=({imageData})=>{
-    Success("helloo");
+const Image_retrive=({imageData,setCheckLength})=>{
+    // Success("helloo");
+    useEffect(()=>{
+        setCheckLength(imageData.length==0)
+    },[]);
     return(
         <>
         {imageData.length==0?<div className="grid place-items-center items-center mt-8 w-full">
             <h1 className="text-center text-red-600 text-pretty text-2xl">Opps! There  is  no similer image is found in database</h1>
         </div>
-        :<div className="grid grid-cols-3 gap-2 scrollbar-hide overflow-x-hidden overflow-y-hidden">
+        :<div className="grid grid-cols-3 gap-3 p-2 scrollbar-hide overflow-x-hidden overflow-y-hidden">
         {imageData.map((image, index) => (
         <div className="h-full" key={index}>
          <div key={index} className=" rounded-lg overflow-x-hidden overflow-y-hidden">

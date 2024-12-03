@@ -23,7 +23,7 @@ const Content = () => {
   const [retrive_image,setRetrive_images] = useState([]);
   const [submitClick,setSubmitClick] = useState(false);
   const image = imgRef.current;
-
+  const [checklength,setCheckLength] = useState(false);
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
@@ -48,7 +48,6 @@ const Content = () => {
     } else {
       setNavigateNextPage(false);
     }
-    console.log(preview);
   };
   const EverythingRight= ()=>{
     if (file) {
@@ -90,7 +89,6 @@ const Content = () => {
       setLoading(false);
       setSubmitClick(true);
     },2000);
-    console.log(payload);
   };
   useEffect(() => {
     handleUpload();
@@ -175,7 +173,7 @@ const Content = () => {
                   buttonName={"Next"}
                 />
               ) : (
-                check?retrive_image.length==0?<FormSubmit handleSubmit={handleSubmit} loading={loading}/>
+                check?retrive_image.length==0?checklength?<FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true}/>:<FormSubmit handleSubmit={handleSubmit} loading={loading}/>
                 :<FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true}/>:
                 <Button
                   handleUpload={EverythingRight}
@@ -191,10 +189,14 @@ const Content = () => {
               />
             )}
             <div>
-              {retrive_image.length==0?"":<Button
+              {retrive_image.length==0?!submitClick?"":<Button
                 handleUpload={handelSearchAgain}
                 file={file}
-                buttonName={"Search for another image "}
+                buttonName={"opps ! Search again "}
+              />:<Button
+                handleUpload={handelSearchAgain}
+                file={file}
+                buttonName={"search anything "}
               />}
             </div>
            </div>
@@ -207,7 +209,7 @@ const Content = () => {
           <div className="border-s-violet-600 overflow-x-hidden overflow-y-hidden element" >
                        {!loading?!submitClick?"":
                         <div className="">
-                          <Image_retrive imageData={retrive_image}
+                          <Image_retrive imageData={retrive_image} setCheckLength={setCheckLength}
                          /></div>:
                          <div className="flex justify-center items-center min-h-48">
                          <div className="w-24 h-24">
