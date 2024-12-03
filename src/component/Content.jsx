@@ -69,13 +69,13 @@ const Content = () => {
   const handleSubmit =(e) => {
     setLoading(true);
     e.preventDefault();
-    const payload ={
+    const payload = {
       imagelink:preview,
       rois:rois
     }
     setTimeout(async()=>{
       try {
-        const response =  await axios.post('http://127.0.0.1:5000/search',payload,{
+        const response =  await axios.post('https://backend-rois.onrender.com/search',payload,{
           headers: {
             'Content-Type': 'application/json',
           },
@@ -101,6 +101,7 @@ const Content = () => {
       x: 0,
       y: 0,
     });
+    setCheckLength(false);
     setSubmitClick(false);
     setCheck(false);
     setFile(null);

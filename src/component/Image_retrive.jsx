@@ -15,7 +15,7 @@ const Image_retrive=({imageData,setCheckLength})=>{
         {imageData.map((image, index) => (
         <div className="h-full" key={index}>
          <div key={index} className=" rounded-lg overflow-x-hidden overflow-y-hidden">
-          <img src={image.replace("../Frontend/public","")} alt={`Image ${index + 1}`} className="h-80 w-screen m-auto object-contain" />
+          <img src={"Animals/"+image} alt={`Image ${index + 1}`} className="h-80 w-screen m-auto object-contain" />
         </div>
         <a href="#" className="text-xl text-blue-700 rounded-lg p-1">download</a>
        </div>
