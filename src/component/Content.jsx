@@ -10,7 +10,7 @@ import ReactLoading from 'react-loading';
 export const canvasData = createContext();
 const Content = () => {
   // const  value = useContext(context);
-  const [imageDetails, setImageDetails] = useState({width: 0,height: 0,x: 0,y: 0,});
+  const [imageDetails, setImageDetails] = useState({width: 0,height: 0,x: 0,y: 0});
   const[check,setCheck] = useState(false);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
