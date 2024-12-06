@@ -3,12 +3,12 @@ import Image_retrive from "./component/Image_retrive";
 import Home from "./component/Home";
 import React, {createContext, useContext } from "react";
 import './App.css'
-import Canvas from "./component/Canvas";
+// import Canvas from "./component/Canvas";
 export const context = createContext();
 function App() {
   return (
     <>
-      <context.Provider value={{name:"nitin"}}>
+      <context.Provider value={{name:"abc"}}>
       <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path="/search" element={<Image_retrive/>}/>

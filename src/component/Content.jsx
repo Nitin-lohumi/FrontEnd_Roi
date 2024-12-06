@@ -21,14 +21,23 @@ const Content = () => {
   const [isDisable,setIsDisable] =useState(false);
   const [loading,setLoading] = useState(false);
   const [retrive_image,setRetrive_images] = useState([]);
-  const [submitClick,setSubmitClick] = useState(false);
+  const [simple_submit_click,SetSimple_Search_click] = useState(false);
+  const [High_submit_click,SetHigh_Search_click] = useState(false);
   const image = imgRef.current;
   const [checklength,setCheckLength] = useState(false);
+  const [Simle_btnshow,setSimple_btnshow] = useState(false);
+  const [High_btnshow,setHigh_btnshow] = useState(false);
+  const [errorbtn,setErrorBtn] = useState(false);
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
-
+  // console.log("high",High_btnshow)
+  // console.log("simple",Simle_btnshow)
+  // console.log("retrive image len",retrive_image.length)
+  // console.log("High_submit_click",High_submit_click)
+  // console.log("simple_submit_click",simple_submit_click)
   const handleUpload = () => {
     if (file) {
       if (file && file.type.startsWith("image/")) {
@@ -69,13 +78,18 @@ const Content = () => {
   const handleSubmit =(e) => {
     setLoading(true);
     e.preventDefault();
+    setSimple_btnshow(false);
+    setHigh_btnshow(true);
+    SetSimple_Search_click(true);
+    setErrorBtn(true);
+
     const payload = {
       imagelink:preview,
       rois:rois
     }
     setTimeout(async()=>{
       try {
-        const response =  await axios.post('https://backend-rois.onrender.com/search',payload,{
+        const response =  await axios.post('http://127.0.0.1:5000/search',payload,{
           headers: {
             'Content-Type': 'application/json',
           },
@@ -84,16 +98,46 @@ const Content = () => {
         console.log(data);
         setRetrive_images(data.data.Matched_images);
       } catch (error) {
-        console.log(error);
       }
       setLoading(false);
-      setSubmitClick(true);
     },2000);
   };
+  
+  function handleHighSearch(e){
+    console.log(preview);
+    console.log(rois);
+    e.preventDefault();
+    setLoading(false);
+    setSimple_btnshow(true);
+    setErrorBtn(true);
+    setHigh_btnshow(false);
+    SetHigh_Search_click(true);
+    // const payload = {
+    //   imagelink:preview,
+    //   rois:rois
+    // }
+    // setRetrive_images([]);
+    // setTimeout(async()=>{
+    //   try {
+    //     const response =  await axios.post('http://127.0.0.1:5000/HighSearch',payload,{
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     });
+    //     const data = response.data;
+    //     console.log(data);
+    //     setRetrive_images(data.data.Matched_images);
+    //   } catch (error) {
+    //   }
+    //   setLoading(false);
+    // },2000);
+  }
+
   useEffect(() => {
     handleUpload();
   }, [file]);
    
+
   function handelSearchAgain(){
     setImageDetails({
       width: 0,
@@ -102,7 +146,11 @@ const Content = () => {
       y: 0,
     });
     setCheckLength(false);
-    setSubmitClick(false);
+    setHigh_btnshow(false);
+    setSimple_btnshow(false);
+    SetSimple_Search_click(false);
+    SetHigh_Search_click(false);
+    setErrorBtn(false);
     setCheck(false);
     setFile(null);
     setPreview(null);
@@ -174,8 +222,18 @@ const Content = () => {
                   buttonName={"Next"}
                 />
               ) : (
-                check?retrive_image.length==0?checklength?<FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true}/>:<FormSubmit handleSubmit={handleSubmit} loading={loading}/>
-                :<FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true}/>:
+                check?retrive_image.length==0?checklength?
+                <FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true}  btn_name={"sach"}/>:
+                <div className="flex justify-between w-full">
+                  <div className="mt-2 mr-4 rounded-lg shadow-md">
+                  <FormSubmit handleSubmit={handleHighSearch} loading={loading} disable={High_btnshow} 
+                  btn_name={"Ultra Search"}
+                   color={"green"}/>
+                </div>
+                  <div className="mt-2 rounded-lg shadow-md"><FormSubmit handleSubmit={handleSubmit} disable={Simle_btnshow} loading={loading} btn_name={"simple search"} color={"yellow"}/></div>
+                </div>
+                :<div><FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true} btn_name={"Search"}/>
+                <FormSubmit handleSubmit={handleHighSearch} loading={loading} disable={true}  btn_name={"ultra search"}/></div>:
                 <Button
                   handleUpload={EverythingRight}
                   file={file}
@@ -190,27 +248,33 @@ const Content = () => {
               />
             )}
             <div>
-              {retrive_image.length==0?!submitClick?"":<Button
-                handleUpload={handelSearchAgain}
-                file={file}
-                buttonName={"opps ! Search again "}
-              />:<Button
-                handleUpload={handelSearchAgain}
-                file={file}
-                buttonName={"search anything "}
-              />}
+              {retrive_image.length==0?"": 
+              <div className="flex flex-row">
+               <div className="flex mr-3">
+               {High_btnshow? 
+               <FormSubmit handleSubmit={handleHighSearch} loading={loading} disable={!High_btnshow} 
+               btn_name={"Ultra Search"} color={"green"}/>: 
+              <FormSubmit handleSubmit={handleSubmit} loading={loading} disable={High_btnshow}
+                btn_name={"simple search"} color={"Red"}/>}
+              </div> 
+              <Button handleUpload={handelSearchAgain}
+              file={file}
+              buttonName={"search anything "}
+            />      
+            </div>
+            }
             </div>
            </div>
-
           </div>
         </div>
       )}
 
       {/* ********************************* result image ********************************************* */}
           <div className="border-s-violet-600 overflow-x-hidden overflow-y-hidden element" >
-                       {!loading?!submitClick?"":
+                       {!loading?(!simple_submit_click&!High_submit_click)?"":
                         <div className="">
-                          <Image_retrive imageData={retrive_image} setCheckLength={setCheckLength}
+                          <Image_retrive imageData={retrive_image}
+                           setCheckLength={setCheckLength} searchType={High_btnshow} handelSearchAgain={handelSearchAgain}
                          /></div>:
                          <div className="flex justify-center items-center min-h-48">
                          <div className="w-24 h-24">
