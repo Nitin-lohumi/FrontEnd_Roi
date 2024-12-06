@@ -39,12 +39,9 @@ const Image_retrive = ({
           <div className="grid grid-cols-3 gap-3 p-2 scrollbar-hide overflow-x-hidden overflow-y-hidden">
             {imageData.map((image, index) => (
               <div className="h-full" key={index}>
-                <div
-                  key={index}
-                  className=" rounded-lg overflow-x-hidden overflow-y-hidden"
-                >
+                <div  className=" rounded-lg overflow-x-hidden overflow-y-hidden" >
                   <img
-                    src={"DataSet/" + image}
+                    src={searchType?"Dataset/"+image:image}
                     alt={`Image ${index + 1}`}
                     className="h-80 w-screen m-auto object-contain"
                   />

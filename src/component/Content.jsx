@@ -28,6 +28,7 @@ const Content = () => {
   const [Simle_btnshow,setSimple_btnshow] = useState(false);
   const [High_btnshow,setHigh_btnshow] = useState(false);
   const [errorbtn,setErrorBtn] = useState(false);
+  const [btn1,setBtn1]= useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -76,13 +77,13 @@ const Content = () => {
     }
   }
   const handleSubmit =(e) => {
+    setBtn1(true);
     setLoading(true);
     e.preventDefault();
-    setSimple_btnshow(false);
+    setSimple_btnshow(true);
     setHigh_btnshow(true);
     SetSimple_Search_click(true);
     setErrorBtn(true);
-
     const payload = {
       imagelink:preview,
       rois:rois
@@ -98,45 +99,50 @@ const Content = () => {
         console.log(data);
         setRetrive_images(data.data.Matched_images);
       } catch (error) {
+        console.log(error);
       }
       setLoading(false);
     },2000);
   };
   
   function handleHighSearch(e){
-    console.log(preview);
-    console.log(rois);
+    const payload = {
+      imagelink:preview,
+      rois:rois
+    }
     e.preventDefault();
-    setLoading(false);
+    setBtn1(true);
+    setLoading(true);
     setSimple_btnshow(true);
     setErrorBtn(true);
     setHigh_btnshow(false);
     SetHigh_Search_click(true);
-    // const payload = {
-    //   imagelink:preview,
-    //   rois:rois
-    // }
-    // setRetrive_images([]);
-    // setTimeout(async()=>{
-    //   try {
-    //     const response =  await axios.post('http://127.0.0.1:5000/HighSearch',payload,{
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-    //     const data = response.data;
-    //     console.log(data);
-    //     setRetrive_images(data.data.Matched_images);
-    //   } catch (error) {
-    //   }
-    //   setLoading(false);
-    // },2000);
+    // SetSimple_Search_click(false);
+    // setSimple_btnshow(true)
+    setRetrive_images([]);
+    setTimeout(async()=>{
+      try {
+        const response =  await axios.post('http://127.0.0.1:5000/HighSearch',payload,{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.data;
+        console.log(data);
+        setRetrive_images(data.data.Matched_images);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false);
+      console.log(retrive_image);
+    },2000);
+
   }
 
   useEffect(() => {
     handleUpload();
   }, [file]);
-   
+   console.log(preview);
 
   function handelSearchAgain(){
     setImageDetails({
@@ -153,6 +159,7 @@ const Content = () => {
     setErrorBtn(false);
     setCheck(false);
     setFile(null);
+    setBtn1(false);
     setPreview(null);
     setIsReview(false);
     setNavigateNextPage(false);
@@ -230,7 +237,8 @@ const Content = () => {
                   btn_name={"Ultra Search"}
                    color={"green"}/>
                 </div>
-                  <div className="mt-2 rounded-lg shadow-md"><FormSubmit handleSubmit={handleSubmit} disable={Simle_btnshow} loading={loading} btn_name={"simple search"} color={"yellow"}/></div>
+                  <div className="mt-2 rounded-lg shadow-md"><FormSubmit handleSubmit={handleSubmit} 
+                  disable={Simle_btnshow} loading={loading} btn_name={"simple search"} color={"yellow"}/></div>
                 </div>
                 :<div><FormSubmit handleSubmit={handleSubmit} loading={loading} disable={true} btn_name={"Search"}/>
                 <FormSubmit handleSubmit={handleHighSearch} loading={loading} disable={true}  btn_name={"ultra search"}/></div>:
@@ -257,10 +265,10 @@ const Content = () => {
               <FormSubmit handleSubmit={handleSubmit} loading={loading} disable={High_btnshow}
                 btn_name={"simple search"} color={"Red"}/>}
               </div> 
-              <Button handleUpload={handelSearchAgain}
+             {!loading ? <Button handleUpload={handelSearchAgain}
               file={file}
               buttonName={"search anything "}
-            />      
+            /> :""}
             </div>
             }
             </div>
